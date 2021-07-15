@@ -1,0 +1,29 @@
+{
+	"plugins": ["react", "react-hooks"],
+	"rules": {
+		"react/jsx-closing-bracket-location": [ "error", { "selfClosing": "after-props", "nonEmpty": "after-props" } ],
+		"react/jsx-indent-props": ["error", "tab"],
+		"react/jsx-indent": ["error", "tab"],
+		"react/jsx-max-props-per-line": ["error", { "when": "multiline" }],
+		"react/jsx-filename-extension": "off",
+		"react/react-in-jsx-scope": "off",
+		"react/no-unknown-property": [ "warn", { "ignore": ["class", "for", "hreflang"] } ],
+		"react-hooks/rules-of-hooks": "error",
+		"react-hooks/exhaustive-deps": 0,
+		"no-param-reassign": ["error", { "props": false }],
+		"jsx-quotes": ["error", "prefer-double"],
+		"indent": ["error", "tab", { "SwitchCase": 1 }],
+		"class-methods-use-this": "off",
+		"linebreak-style": 0,
+		"no-multiple-empty-lines": ["error", { "max": 1 }],
+		"no-multi-spaces": "error",
+		"newline-per-chained-call": ["error", { "ignoreChainWithDepth":1}],
+		"semi": ["error", "always"],
+		"no-trailing-spaces": "error",
+		"no-console": ["warn", { "allow": ["error"] }],
+		"react/jsx-props-no-spreading": "off",
+		"object-property-newline": "error",
+		"no-unused-vars": "error",
+		"object-curly-spacing": ["error", "always"]
+	}
+}
