@@ -1,39 +1,57 @@
-import { Switch, Route, Redirect } from "react-router-dom";
-import { Guide, Home, Inbox, Reports, Axies } from "../../../Routes";
+import { useMemo, ComponentType } from "react";
+import { Switch, Route, Redirect, RouteProps, RouteComponentProps } from "react-router-dom";
+import { Guide, Home, Inbox, Reports, Axies, Dashboard } from "../../../Routes";
 
-export const Main = () => {
+export const Main = ({ isLoggedIn }: any) => {
 	return (
-		<main className={"flex flex-grow"}>
+		<main className={"flex flex-grow overflow-y-auto"} style={{ maxHeight: 'calc(100vh - 94px)' }}>
 			<Switch>
 
-				<Route
+				<ProtectedRoute
 					exact
 					path={"/"}
-					component={Home} />
+					component={Dashboard}
+					isLoggedIn={isLoggedIn} />
 
-				<Route
+				<ProtectedRoute
 					exact
 					path={"/reports"}
-					component={Reports} />
+					component={Reports}
+					isLoggedIn={isLoggedIn} />
 
-				<Route
+				<ProtectedRoute
 					exact
 					path={"/guide"}
-					component={Guide} />
+					component={Guide}
+					isLoggedIn={isLoggedIn} />
 
-				<Route
+				<ProtectedRoute
 					exact
 					path={"/inbox"}
-					component={Inbox} />
+					component={Inbox}
+					isLoggedIn={isLoggedIn} />
 
-				<Route
+				<ProtectedRoute
 					exact
 					path={"/axies"}
-					component={Axies} />
+					component={Axies}
+					isLoggedIn={isLoggedIn} />
 
 				<Redirect from={"*"} to={"/"} />
 
 			</Switch>
 		</main>
+	);
+};
+
+const ProtectedRoute = (props: RouteProps & { isLoggedIn: boolean }) => {
+	const { isLoggedIn, component, ...routeProps } = props;
+	const routeComponent: ComponentType<RouteComponentProps<any>> = useMemo(() => {
+		return isLoggedIn && component ? component : Home;
+	}, [props]);
+	return (
+		<Route
+			component={routeComponent}
+			{...routeProps} />
 	);
 };

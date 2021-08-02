@@ -1,21 +1,42 @@
 import { AcademicCapIcon, ViewGridIcon } from '@heroicons/react/solid';
-import { CogIcon, BellIcon, UserCircleIcon } from '@heroicons/react/outline';
 import axieTab from '../../../../assets/image/tab-axie.png';
 import cx from 'classnames';
-import { Fragment } from 'react';
+import { Fragment, useMemo } from 'react';
 import { Popover, Transition } from '@headlessui/react';
 import {
 	ChartBarIcon,
 	CursorClickIcon,
 	MenuIcon,
 	XIcon,
+	CogIcon,
+	BellIcon,
+	UserCircleIcon,
+	LogoutIcon,
+	ExclamationIcon,
+	InformationCircleIcon,
 } from '@heroicons/react/outline';
 import { links } from '../../../../utils/constants/links';
 import { Link } from 'react-router-dom';
+import classNames from 'classnames';
+import { useWindowDimensions } from '../../../../hooks/useWindowDimensions';
 
-export const MemberNav = () => {
+interface IMemberNav {
+	onLogout: () => void;
+}
+export const MemberNav = ({ onLogout }: IMemberNav) => {
+	const settings = useMemo(() => {
+		return buildSettings({
+			onAcountClick: () => {},
+			onSettingsClick: () => {},
+			onLogout,
+		});
+	}, [onLogout]);
+
+	const { width } = useWindowDimensions();
+	const atMostTabView = useMemo(() => width <= 767, [width]);
+
 	return (
-		<Popover as={'header'} className="relative bg-white w-full flex justify-start items-center border-b-2 border-gray-100  md:justify-between px-2 md:px-0 py-4">
+		<Popover as={'header'} className="relative bg-white w-full flex justify-start items-center border-b border-gray-100  md:justify-between px-2 py-4">
 			{({ open }: any) => (
 				<>
 					<div className="-mr-2 -my-2 md:hidden flex flex-row items-center">
@@ -29,7 +50,7 @@ export const MemberNav = () => {
 						</h1>
 					</div>
 
-					<Popover.Group as="nav" className="md:flex -my-2 w-full">
+					<Popover.Group as="nav" className="flex -my-2 w-full justify-end">
 						<Popover className="relative mr-auto hidden md:inline-block">
 							{({ open }) => (
 								<>
@@ -45,21 +66,21 @@ export const MemberNav = () => {
 										show={open}
 										as={Fragment}
 										enter="transition ease-out duration-200"
-										enterFrom="opacity-0 translate-y-1"
+										enterFrom="opacity-0 -translate-y-1"
 										enterTo="opacity-100 translate-y-0"
 										leave="transition ease-in duration-150"
 										leaveFrom="opacity-100 translate-y-0"
-										leaveTo="opacity-0 translate-y-1">
+										leaveTo="opacity-0 -translate-y-1">
 										<Popover.Panel
 											static
 											className="absolute z-10 mt-3 transform w-screen max-w-md">
 											<div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden">
-												<div className="relative grid gap-6 bg-white px-5 py-6 sm:gap-8 sm:p-8">
+												<div className="relative grid gap-1 bg-white p-2">
 													{tools.map((item) => (
 														<a
 															key={item.name}
 															href={item.href}
-															className="-m-3 p-3 flex items-start rounded-lg hover:bg-gray-50">
+															className="p-3 flex items-start rounded-lg hover:bg-gray-50">
 															<item.icon className="flex-shrink-0 h-6 w-6 text-blue-600" aria-hidden="true" />
 															<div className="ml-4">
 																<p className="text-base font-medium text-gray-900">{item.name}</p>
@@ -74,7 +95,7 @@ export const MemberNav = () => {
 								</>
 							)}
 						</Popover>
-						<Popover className="relative hidden md:inline-block">
+						<Popover className="relative inline-block">
 							{({ open }) => (
 								<>
 									<Popover.Button
@@ -89,25 +110,49 @@ export const MemberNav = () => {
 										show={open}
 										as={Fragment}
 										enter="transition ease-out duration-200"
-										enterFrom="opacity-0 translate-y-1"
+										enterFrom="opacity-0 -translate-y-1"
 										enterTo="opacity-100 translate-y-0"
 										leave="transition ease-in duration-150"
 										leaveFrom="opacity-100 translate-y-0"
-										leaveTo="opacity-0 translate-y-1">
+										leaveTo="opacity-0 -translate-y-1">
 										<Popover.Panel
 											static
-											className="absolute z-10 mt-3 transform w-screen max-w-md md:left-full md:-translate-x-full">
+											className="absolute z-10 mt-3 transform w-screen md:max-w-sm lg:max-w-md left-full -translate-x-full"
+											style={atMostTabView
+												? {
+													left: "calc(-100vw + 200%)",
+													transform: 'none'
+												}
+												: {}}>
 											<div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden">
-												<div className="relative grid gap-6 bg-white px-5 py-6 sm:gap-8 sm:p-8">
+												<div className="relative grid gap-1 bg-white p-2">
 													{notifications.map((item) => (
 														<a
 															key={item.name}
 															href={item.href}
-															className="-m-3 p-3 flex items-start rounded-lg hover:bg-gray-50">
-															<item.icon className="flex-shrink-0 h-6 w-6 text-blue-600" aria-hidden="true" />
+															className={classNames("p-3 flex items-start rounded-lg", {
+																"hover:bg-yellow-50": item.color === 'yellow',
+																"hover:bg-red-50": item.color === 'red',
+																"hover:bg-gray-50": !item.color || item.color === 'default'
+															})}>
+															<item.icon
+																aria-hidden="true"
+																className={classNames("flex-shrink-0 h-6 w-6", {
+																	"text-yellow-600": item.color === 'yellow',
+																	"text-red-600": item.color === 'red',
+																	"text-blue-600": !item.color || item.color === 'default'
+																})} />
 															<div className="ml-4">
-																<p className="text-base font-medium text-gray-900">{item.name}</p>
-																<p className="mt-1 text-sm text-gray-500">{item.description}</p>
+																<p
+																	className={classNames("text-base font-medium text-gray-900", {
+																		"text-yellow-500": item.color === 'yellow',
+																		"text-red-500": item.color === 'red',
+																	})}>{item.name}</p>
+																<p
+																	className={classNames("mt-1 text-sm text-gray-500", {
+																		"text-yellow-400": item.color === 'yellow',
+																		"text-red-400": item.color === 'red',
+																	})}>{item.description}</p>
 															</div>
 														</a>
 													))}
@@ -146,16 +191,30 @@ export const MemberNav = () => {
 											className="absolute z-10 mt-3 transform w-52 left-full -translate-x-full">
 											<div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden">
 												<div className="relative bg-white flex flex-col p-2">
-													{settings.map((item) => (
-														<div
-															key={item.name}
-															className="cursor-pointer p-2 flex items-start rounded-lg hover:bg-gray-50">
-															<item.icon className="flex-shrink-0 h-6 w-6 text-blue-600" aria-hidden="true" />
-															<div className="ml-4">
-																<p className="text-base font-medium text-gray-900">{item.name}</p>
+													{settings.map((item, i) => {
+														if (item.name === 'divider') {
+															return (
+																<div
+																	key={i}
+																	className="bg-gray-100 h-px my-1">
+																</div>
+															);
+														}
+														return (
+															<div
+																onClick={item.onClick}
+																key={item.name}
+																className="cursor-pointer p-2 flex items-start rounded-lg hover:bg-gray-50">
+																{
+																	item.icon
+																	&& <item.icon className="flex-shrink-0 h-6 w-6 text-blue-600" aria-hidden="true" />
+																}
+																<div className="ml-4">
+																	<p className="text-base font-medium text-gray-900">{item.name}</p>
+																</div>
 															</div>
-														</div>
-													))}
+														);
+													})}
 												</div>
 											</div>
 										</Popover.Panel>
@@ -219,21 +278,22 @@ export const MemberNav = () => {
 						</Popover.Panel>
 					</Transition>
 				</>
-			)}
-		</Popover>
+			)
+			}
+		</Popover >
 	);
 };
 
 const tools = [
 	{
 		name: 'Gas Watch',
-		description: 'Get a better understanding of where your traffic is coming from.',
+		description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut congue id lectus at dapibus. Nunc nec ornare turpis, eget iaculis nisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. ',
 		href: '#',
 		icon: ChartBarIcon,
 	},
 	{
 		name: 'Calculator',
-		description: 'Speak directly to your customers in a more meaningful way.',
+		description: 'Curabitur eget neque in enim dignissim convallis nec at dui. Fusce justo velit, fringilla eu ex blandit, facilisis auctor lacus. Vestibulum pulvinar rutrum augue eu rhoncus.',
 		href: '#',
 		icon: CursorClickIcon,
 	}
@@ -241,30 +301,52 @@ const tools = [
 const notifications = [
 	{
 		name: 'Alert',
-		description: 'Get a better understanding of where your traffic is coming from.',
+		description: 'Praesent consectetur mi ac nunc suscipit condimentum. Mauris urna tortor, tempus in dictum sit amet, malesuada quis lectus. Nam condimentum faucibus risus feugiat pulvinar.',
 		href: '#',
-		icon: ChartBarIcon,
+		icon: BellIcon,
+		color: 'yellow'
 	},
 	{
 		name: 'Warning',
-		description: 'Speak directly to your customers in a more meaningful way.',
+		description: 'Integer bibendum sollicitudin nulla vitae congue. Donec vitae risus purus. Sed vel erat ante.',
 		href: '#',
-		icon: CursorClickIcon,
+		icon: ExclamationIcon,
+		color: 'red'
 	},
 	{
 		name: 'Info',
-		description: 'Speak directly to your customers in a more meaningful way.',
+		description: 'Nulla facilisi. Donec vel turpis ipsum. Aliquam aliquam sagittis hendrerit. Suspendisse eu erat luctus, suscipit dolor id, vestibulum enim.',
 		href: '#',
-		icon: CursorClickIcon,
+		icon: InformationCircleIcon,
 	}
 ];
-const settings = [
-	{
-		name: 'Account',
-		icon: ChartBarIcon,
-	},
-	{
-		name: 'Settings',
-		icon: CogIcon,
-	}
-];
+
+interface IBuildUserOptionsDropdown {
+	onLogout: () => void,
+	onAcountClick: () => void,
+	onSettingsClick: () => void
+}
+const buildSettings = (props: IBuildUserOptionsDropdown) => {
+	const { onLogout, onAcountClick, onSettingsClick } = props;
+	return [
+		{
+			name: 'Account',
+			icon: UserCircleIcon,
+			onClick: onAcountClick
+		},
+		{
+			name: 'Settings',
+			icon: CogIcon,
+			onClick: onSettingsClick
+		},
+		{
+			name: 'divider',
+			icon: null,
+		},
+		{
+			name: 'Logout',
+			icon: LogoutIcon,
+			onClick: onLogout
+		}
+	];
+};

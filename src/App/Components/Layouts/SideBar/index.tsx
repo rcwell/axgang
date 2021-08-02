@@ -57,7 +57,7 @@ export const SideBar = () => {
 
 	return (
 		<nav
-			className={"bg-white hidden border-r-2 border-gray-100 relative md:block"}>
+			className={"bg-white hidden border-r border-gray-100 relative md:block"}>
 			<div className={"flex items-center gap-1 lg:flex-1 cursor-pointer p-4"}>
 				<AcademicCapIcon
 					className="h-10 w-10 text-blue-600" />

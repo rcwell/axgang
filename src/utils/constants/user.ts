@@ -1,8 +1,10 @@
 export interface IUser {
-	Name: string;
-	Id: string;
+	email: string;
+	id: string;
+	name: string;
+	picture: string;
 }
 export interface IUserCredentials<T> {
-	Username: T;
+	Email: T;
 	Password: T;
 }

@@ -21,11 +21,6 @@ export const static_variables = {
 	},
 };
 
-export const dynamic_variables = {
-	roninAddress: "0x976d45396c611510ca8abf5f3bb78063b94dd976",
-	axieId: "1341883",
-};
-
 export const axies_query = `
 	query ($auctionType: AuctionType, $criteria: AxieSearchCriteria, $from: Int, $sort: SortBy, $size: Int, $roninAddress: String!) {
 		publicProfileWithRoninAddress(roninAddress: $roninAddress) {
@@ -73,6 +68,7 @@ export const axies_query = `
 		}
 	}
 `;
+
 export const axie_info = `query GetAxieDetail($axieId: ID!) {
   axie(axieId: $axieId) {
     ...AxieDetail
@@ -162,4 +158,31 @@ fragment AxieStats on AxieStats {
   morale
   __typename
 }
+`;
+
+export const eth_slp_rate = `query NewEthExchangeRate {
+	exchangeRate {
+		slp {
+		  usd
+		  __typename
+		}
+	  	__typename
+	}
+}`;
+
+export const public_profile = `
+	query ($roninAddress: String!) {
+		publicProfileWithRoninAddress(roninAddress: $roninAddress) {
+			accountId
+			name
+			addresses {
+				ethereum
+				tomo
+				loom
+				ronin
+				__typename
+			}
+		  	__typename
+	  	}
+	}
 `;

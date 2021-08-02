@@ -1,6 +1,6 @@
 import { gql, useLazyQuery, useQuery } from "@apollo/client";
 import { useMemo, useState } from "react";
-import { axies_query, axie_info, dynamic_variables, static_variables } from '../../../utils/constants/queries';
+import { axies_query, axie_info, static_variables } from '../../../utils/constants/queries';
 import { Transition, Dialog } from '@headlessui/react';
 import { Fragment } from 'react';
 import { AbilityCard, AxieCard } from "../../Components/UI";
@@ -12,7 +12,7 @@ export const Axies = () => {
 	const { loading, data } = useQuery(gql`${axies_query}`, {
 		variables: {
 			...static_variables,
-			...dynamic_variables
+			roninAddress: "0x976d45396c611510ca8abf5f3bb78063b94dd976",
 		}
 	});
 
@@ -89,7 +89,7 @@ export const Axies = () => {
 							<div className="inline-block w-full max-w-4xl my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
 								{
 									axieInfoMeta.loading ? (
-										<span className={"text-3xl text-gray-200"}>Loading Axie Info</span>
+										<span className={"text-3xl text-gray-200 flex items-center justify-center"} style={{ height: 700 }}>Loading Axie Info</span>
 									) : selected_axie ? (
 										<div className={"w-full flex justify-center items-center flex-col"} >
 											<AxieCard
