@@ -17,13 +17,15 @@ export const UserContext = createContext<{ user: IUser | null, onSetUser: (user:
 	onSetUser: () => { }
 });
 
+export const dummyUser = {
+	email:"Test",
+	name:"Name",
+	id:"ID",
+	picture:""
+};
+
 const App = () => {
-	const [user, setUser] = useState<IUser | null>({
-		email:"Test",
-		name:"Name",
-		id:"ID",
-		picture:""
-	});
+	const [user, setUser] = useState<IUser | null>(null);
 	const isLoggedIn = useMemo(() => user !== null, [user]);
 
 	useEffect(() => {
