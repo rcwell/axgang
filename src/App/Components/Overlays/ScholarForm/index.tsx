@@ -22,7 +22,7 @@ export const ScholarForm = (props: ScholarFormProps) => {
 	const alertCtx = useContext(AlertContext);
 
 	const handleOnSubmit = () => {
-		const _errors: IUserCredentials<boolean> & { ManagerId: boolean, WalletId: boolean } = ["Email", "ManagerId", "Password", "WalletId"]
+		const _errors: IUserCredentials<boolean> & { ManagerId: boolean, WalletId: boolean } = ["Email", "ManagerId","teamName", "Password", "WalletId"]
 			.reduce((err, key) => {
 				const value = { ...credentials }[key] || "";
 				let safe = value !== "";
@@ -130,6 +130,23 @@ export const ScholarForm = (props: ScholarFormProps) => {
 							})} />
 						{errors.Email && (
 							<p style={{ bottom: -4 }} className="text-red-500 text-xs italic absolute">Please enter valid email.</p>
+						)}
+					</div>
+					<div className="relative">
+						<label className="block text-gray-700 text-sm font-bold" htmlFor="Team">
+							Team Name
+						</label>
+						<input
+							onKeyUp={handleOnChange}
+							autoComplete="off"
+							id="teamName"
+							type="text"
+							placeholder="Team Name"
+							className={cx("appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline", {
+								"border-red-500 ": errors.Password
+							})} />
+						{errors.Password && (
+							<p style={{ bottom: -4 }} className="text-red-500 text-xs italic absolute">Please enter a password.</p>
 						)}
 					</div>
 					<div className="relative">

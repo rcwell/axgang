@@ -10,7 +10,7 @@ import classNames from "classnames";
 import { useSlpRates } from "../../../hooks/useSlpRates";
 import { SlpPriceChart } from "../../Components/UI/SlpPriceChart";
 
-const ronin_id = "0x976d45396c611510ca8abf5f3bb78063b94dd976";
+const ronin_id = "0xfc608b17e618cb19e439e4dd052058599df38e79";
 
 export const Dashboard = () => {
 	const slpRates = useSlpRates();

@@ -12,7 +12,7 @@ export const Axies = () => {
 	const { loading, data } = useQuery(gql`${axies_query}`, {
 		variables: {
 			...static_variables,
-			roninAddress: "0x976d45396c611510ca8abf5f3bb78063b94dd976",
+			roninAddress: "0xfc608b17e618cb19e439e4dd052058599df38e79",
 		}
 	});
 

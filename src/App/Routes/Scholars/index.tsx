@@ -29,6 +29,7 @@ export const Scholars = () => {
 						<thead>
 							<tr className="bg-gray-50">
 								<th className="py-2 px-6  w-1/4 font-bold uppercase text-xs text-gray-500">Name</th>
+								<th className="py-2 px-6  w-1/4 font-bold uppercase text-xs text-gray-500">Team Name</th>
 								<th className="py-2 px-6  w-1/4 font-bold uppercase text-xs text-gray-500">Email</th>
 								<th className="py-2 px-6  w-1/4 font-bold uppercase text-xs text-gray-500">Manager</th>
 								<th className="py-2 px-6  w-1/4 font-bold uppercase text-xs text-gray-500">Action</th>
@@ -41,6 +42,9 @@ export const Scholars = () => {
 									.map((_, index) => {
 										return (
 											<tr key={index} className="hover:bg-blue-50 cursor-pointer">
+												<td className={'py-2 w-1/4  px-6 border-b border-gray-50 border-grey-light'}>
+													{"Hey"}
+												</td>
 												<td className={'py-2 w-1/4  px-6 border-b border-gray-50 border-grey-light'}>
 													{"Hey"}
 												</td>
