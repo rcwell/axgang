@@ -14,11 +14,20 @@ const firebaseAuth = firebase.auth();
 // COLLETIONS
 const itemsCollection = database.ref("/Items");
 
+const usersCollection = database.ref("/users");
+const accountsCollection = database.ref("/accounts");
+const inventoryCollection = database.ref("/inventory");
+const cashoutsCollection = database.ref("/cashouts");
+
 // EXPORTS
 export {
 	firebase,
 	database,
-	itemsCollection,
 	googleAuthProvider,
 	firebaseAuth,
+	itemsCollection,
+	usersCollection,
+	accountsCollection,
+	inventoryCollection,
+	cashoutsCollection,
 };

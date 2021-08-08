@@ -1,7 +1,7 @@
 import { AcademicCapIcon } from '@heroicons/react/solid';
 import { links } from '../../../../utils/constants/links';
 import { Link, useHistory, } from 'react-router-dom';
-import axieTab from '../../../../assets/image/tab-axie.png';
+// import axieTab from '../../../../assets/image/tab-axie.png';
 import { useEffect, useState } from 'react';
 import cx from 'classnames';
 
@@ -85,7 +85,7 @@ export const SideBar = () => {
 						</Link>
 					))
 				}
-				<Link
+				{/* <Link
 					to={'/axies'}
 					key={'/axies'}
 					className={cx({
@@ -97,7 +97,7 @@ export const SideBar = () => {
 							"text-blue-500": currentLocation === '/axies',
 						})} />
 					<span className="mt-0.5">Axies</span>
-				</Link>
+				</Link> */}
 			</nav>
 		</nav>
 	);

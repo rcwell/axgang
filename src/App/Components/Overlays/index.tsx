@@ -2,6 +2,7 @@ import { ReactChild } from "react";
 
 export * from "./SignIn";
 export * from './Alerts';
+export * from './ScholarForm';
 
 export const Overlay = ({ children }: { children: ReactChild }) => {
 	return (

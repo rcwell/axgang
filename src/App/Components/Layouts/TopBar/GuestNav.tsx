@@ -1,10 +1,13 @@
 import { AcademicCapIcon } from '@heroicons/react/solid';
 import { Transition, Dialog } from '@headlessui/react';
-import { useState, Fragment } from 'react';
+import { useState, Fragment, useContext } from 'react';
 import { SignIn } from '../../Overlays';
+import { UserContext } from '../../..';
 
-export const GuestNav = ({ onSignIn }: any) => {
+export const GuestNav = () => {
 	const [doSignIn, setDoSignIn] = useState(Boolean);
+
+	const { onSetUser } = useContext(UserContext);
 
 	return (
 		<header className="relative bg-white w-full flex items-center border-b-2 border-gray-100 justify-between px-6 py-4 shadow-sm">
@@ -54,7 +57,7 @@ export const GuestNav = ({ onSignIn }: any) => {
 								<SignIn
 									onOk={(user) => {
 										setDoSignIn(false);
-										onSignIn(user);
+										onSetUser(user);
 									}}
 									onCancel={() => {
 										setDoSignIn(false);

@@ -1,7 +1,7 @@
 import { BeakerIcon } from "@heroicons/react/solid";
 import { useEffect, useMemo, useState } from "react";
 import { ISlpData } from "../../../utils/constants/models";
-import { battles_uri, stats } from "../../../utils/constants/api";
+import { battles_uri, overview_uri } from "../../../utils/constants/api";
 import { gql, useQuery } from "@apollo/client";
 import { public_profile } from "../../../utils/constants/queries";
 import { ReactComponent as SwordsIcon } from '../../../assets/icons/swords.svg';
@@ -68,12 +68,23 @@ export const Dashboard = () => {
 	useEffect(() => {
 		(async () => {
 			try {
-				const more_info_url = `${stats}${ronin_id}`;
+				const more_info_url = `${overview_uri}${ronin_id}`;
 				const res = await fetch(more_info_url);
 				const data = await res.json();
 
 				if (!data.error) {
-					setSlpData(data);
+					setSlpData({
+						last_claim_amount: 0,
+						win_rate: 0,
+						total_matches: 0,
+						mmr: data?.leaderboard?.elo || 0,
+						rank: data?.leaderboard?.rank || 0,
+						ronin_slp: data?.slp?.roninSlp || 0,
+						total_slp: data?.slp?.total || 0,
+						updated_on: data?.slp?.updatedOn || 0,
+						in_game_slp: data?.slp?.gameSlp || 0,
+						last_claim_timestamp: data?.slp?.lastClaimedItemAt || 0,
+					});
 					setFetchingErrors(p => ({
 						...p,
 						SLP: false
@@ -129,7 +140,7 @@ export const Dashboard = () => {
 					</div>
 					<div className="flex-1 text-left">
 						<h3 className="font-bold text-gray-700 text-4xl">{fetchingErrors.SLP ? "ERROR" : slpData.total_slp}</h3>
-						<h5 className="font-bold text-gray-400">Total SLP</h5>
+						<h5 className="font-bold text-gray-400">Claimable SLP</h5>
 					</div>
 				</div>
 				<div className="flex w-full md:w-1/3 lg:w-1/4 gap-4 flex-col py-4 px-6 rounded-xl bg-white border border-gray-100">

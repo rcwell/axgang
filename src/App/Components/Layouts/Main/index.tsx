@@ -1,41 +1,49 @@
-import { useMemo, ComponentType } from "react";
+import { useMemo, ComponentType, useContext } from "react";
 import { Switch, Route, Redirect, RouteProps, RouteComponentProps } from "react-router-dom";
-import { Guide, Home, Inbox, Reports, Axies, Dashboard } from "../../../Routes";
+import { UserContext } from "../../..";
+import { Guide, Home, Inbox, Reports, Axies, Dashboard, Scholars } from "../../../Routes";
 
-export const Main = ({ isLoggedIn }: any) => {
+export const Main = () => {
+	const { user } = useContext(UserContext);
 	return (
-		<main className={"flex flex-grow overflow-y-auto"} style={{ maxHeight: 'calc(100vh - 94px)' }}>
+		<main className={"flex flex-grow overflow-y-auto bg-gray-50 bg-opacity-50"} style={{ maxHeight: 'calc(100vh - 94px)' }}>
 			<Switch>
 
 				<ProtectedRoute
 					exact
 					path={"/"}
 					component={Dashboard}
-					isLoggedIn={isLoggedIn} />
+					isLoggedIn={user !== null} />
+
+				<ProtectedRoute
+					exact
+					path={"/scholars"}
+					component={Scholars}
+					isLoggedIn={user !== null} />
 
 				<ProtectedRoute
 					exact
 					path={"/reports"}
 					component={Reports}
-					isLoggedIn={isLoggedIn} />
+					isLoggedIn={user !== null} />
 
 				<ProtectedRoute
 					exact
 					path={"/guide"}
 					component={Guide}
-					isLoggedIn={isLoggedIn} />
+					isLoggedIn={user !== null} />
 
 				<ProtectedRoute
 					exact
 					path={"/inbox"}
 					component={Inbox}
-					isLoggedIn={isLoggedIn} />
+					isLoggedIn={user !== null} />
 
 				<ProtectedRoute
 					exact
 					path={"/axies"}
 					component={Axies}
-					isLoggedIn={isLoggedIn} />
+					isLoggedIn={user !== null} />
 
 				<Redirect from={"*"} to={"/"} />
 

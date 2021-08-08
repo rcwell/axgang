@@ -1,7 +1,7 @@
 import { AcademicCapIcon, ViewGridIcon } from '@heroicons/react/solid';
 import axieTab from '../../../../assets/image/tab-axie.png';
 import cx from 'classnames';
-import { Fragment, useMemo } from 'react';
+import { Fragment, useContext, useMemo } from 'react';
 import { Popover, Transition } from '@headlessui/react';
 import {
 	ChartBarIcon,
@@ -19,18 +19,19 @@ import { links } from '../../../../utils/constants/links';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 import { useWindowDimensions } from '../../../../hooks/useWindowDimensions';
+import { UserContext } from '../../..';
 
-interface IMemberNav {
-	onLogout: () => void;
-}
-export const MemberNav = ({ onLogout }: IMemberNav) => {
+export const MemberNav = () => {
+
+	const { user, onSetUser } = useContext(UserContext);
+
 	const settings = useMemo(() => {
 		return buildSettings({
-			onAcountClick: () => {},
-			onSettingsClick: () => {},
-			onLogout,
+			onAcountClick: () => { },
+			onSettingsClick: () => { },
+			onLogout: () => onSetUser(null),
 		});
-	}, [onLogout]);
+	}, []);
 
 	const { width } = useWindowDimensions();
 	const atMostTabView = useMemo(() => width <= 767, [width]);
@@ -173,7 +174,7 @@ export const MemberNav = ({ onLogout }: IMemberNav) => {
 										)}>
 										<UserCircleIcon className="h-5 w-5 text-gray-500" />
 										<span className={"ml-2 hidden md:inline-flex"}>
-											Username
+											{user?.name}
 										</span>
 									</Popover.Button>
 

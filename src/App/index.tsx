@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, createContext } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import { IUser } from "../utils/constants/user";
 import { TopBar, Main, Footer, SideBar } from "./Components/Layouts";
@@ -12,14 +12,25 @@ const client = new ApolloClient({
 	cache: new InMemoryCache()
 });
 
+export const UserContext = createContext<{ user: IUser | null, onSetUser: (user: IUser | null) => void }>({
+	user: null,
+	onSetUser: () => { }
+});
+
 const App = () => {
-	const [user, setUser] = useState<IUser | null>(null);
+	const [user, setUser] = useState<IUser | null>({
+		email:"Test",
+		name:"Name",
+		id:"ID",
+		picture:""
+	});
 	const isLoggedIn = useMemo(() => user !== null, [user]);
 
 	useEffect(() => {
-		itemsCollection.on('value', (snapshot) => {
-			const data = snapshot.val();
-			console.log(data);
+		itemsCollection.on('value', () => {
+			// const data = snapshot.val();
+			// if (1 > 2)
+			// 	console.log(data);
 		});
 	}, []);
 
@@ -27,33 +38,33 @@ const App = () => {
 		<FirebaseDatabaseProvider firebase={firebase}>
 			<ApolloProvider client={client}>
 				<AlertsWrapper>
-					<div className={"min-h-screen flex flex-col"}>
-						<Router>
-							{
-								isLoggedIn
-									? (
-										<div className={"flex flex-row flex-grow"}>
-											<SideBar />
-											<div className={"flex flex-col flex-grow"}>
-												<TopBar
-													isLoggedIn={isLoggedIn}
-													onSignIn={setUser}
-													onSignOut={() => setUser(null)} />
-												<Main isLoggedIn />
+					<UserContext.Provider value={{
+						user,
+						onSetUser: (user: IUser | null) => setUser(user)
+					}}>
+						<div className={"min-h-screen flex flex-col"}>
+							<Router>
+								{
+									isLoggedIn
+										? (
+											<div className={"flex flex-row flex-grow"}>
+												<SideBar />
+												<div className={"flex flex-col flex-grow"}>
+													<TopBar />
+													<Main />
+												</div>
 											</div>
-										</div>
-									) : (
-										<>
-											<TopBar
-												isLoggedIn={isLoggedIn}
-												onSignIn={setUser} />
-											<Main />
-										</>
-									)
-							}
-							<Footer />
-						</Router>
-					</div>
+										) : (
+											<>
+												<TopBar />
+												<Main />
+											</>
+										)
+								}
+								<Footer />
+							</Router>
+						</div>
+					</UserContext.Provider>
 				</AlertsWrapper>
 			</ApolloProvider>
 		</FirebaseDatabaseProvider >
