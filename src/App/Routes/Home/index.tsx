@@ -1,8 +1,10 @@
+import { ReactComponent as Logo } from '../../../assets/icons/logo.svg';
+
 export const Home = () => {
 
 	return (
 		<div className={"w-full flex justify-center items-center"}>
-			<span className={"text-3xl text-gray-200"}>Home</span>
+			<Logo className="text-gray-200 max-h-full max-w-full h-3/4 w-3/4" />
 		</div>
 	);
 };

@@ -1,9 +1,8 @@
-import { AcademicCapIcon } from '@heroicons/react/solid';
 import { links } from '../../../../utils/constants/links';
 import { Link, useHistory, } from 'react-router-dom';
-// import axieTab from '../../../../assets/image/tab-axie.png';
 import { useEffect, useState } from 'react';
 import cx from 'classnames';
+import { ReactComponent as Logo } from '../../../../assets/icons/logo.svg';
 
 const inActiveLink = `
 flex
@@ -59,14 +58,10 @@ export const SideBar = () => {
 		<nav
 			className={"bg-white hidden border-r border-gray-100 relative md:block"}>
 			<div className={"flex items-center gap-1 lg:flex-1 cursor-pointer p-4"}>
-				<AcademicCapIcon
-					className="h-10 w-10 text-blue-600" />
-				<h1 className="text-3xl font-bold text-gray-800 accent-font ">
-					AXGANG
-				</h1>
+				<Logo className="text-gray-800" />
 			</div>
 
-			<nav className={cx("flex-grow flex-col p-2 gap-2 flex mt-0 pt-20 relative w-auto bg-transparent", {
+			<nav className={cx("flex-grow flex-col p-2 gap-2 flex mt-0 relative w-auto bg-transparent", {
 			})}>
 				{
 					links.map(link => (
@@ -85,19 +80,6 @@ export const SideBar = () => {
 						</Link>
 					))
 				}
-				{/* <Link
-					to={'/axies'}
-					key={'/axies'}
-					className={cx({
-						[activeLink]: currentLocation === '/axies',
-						[inActiveLink]: currentLocation !== '/axies'
-					})}>
-					<img src={axieTab}
-						className={cx("h-5 w-5 text-gray-600", {
-							"text-blue-500": currentLocation === '/axies',
-						})} />
-					<span className="mt-0.5">Axies</span>
-				</Link> */}
 			</nav>
 		</nav>
 	);

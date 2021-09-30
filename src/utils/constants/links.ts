@@ -1,11 +1,12 @@
 import {
 	AcademicCapIcon,
 	DesktopComputerIcon,
-	InboxIcon,
-	LightBulbIcon,
+	UsersIcon,
+	// InboxIcon,
+	// LightBulbIcon,
 	TableIcon,
 } from "@heroicons/react/outline";
-import { ReactComponent as AxiesIcon } from '../../assets/icons/axie.svg';
+import { ReactComponent as AxiesIcon } from "../../assets/icons/axie.svg";
 
 export const links = [
 	{
@@ -14,25 +15,25 @@ export const links = [
 		icon: DesktopComputerIcon,
 	},
 	{
-		display: "Scholars",
-		path: "/scholars",
-		icon: AcademicCapIcon,
+		display: "Users",
+		path: "/users",
+		icon: UsersIcon,
 	},
 	{
 		display: "Reports",
 		path: "/reports",
 		icon: TableIcon,
 	},
-	{
-		display: "Guide",
-		path: "/guide",
-		icon: LightBulbIcon,
-	},
-	{
-		display: "Inbox",
-		path: "/inbox",
-		icon: InboxIcon,
-	},
+	// {
+	// 	display: "Guide",
+	// 	path: "/guide",
+	// 	icon: LightBulbIcon,
+	// },
+	// {
+	// 	display: "Inbox",
+	// 	path: "/inbox",
+	// 	icon: InboxIcon,
+	// },
 	{
 		display: "Axies",
 		path: "/axies",

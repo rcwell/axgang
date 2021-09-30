@@ -5,3 +5,5 @@ export const slp_price_php = process.env.REACT_APP_AXIE_SLP_PHP_API || "";
 export const stats = process.env.REACT_APP_AXIE_STATS || "";
 
 export const slp_api = process.env.REACT_APP_AXIE_SCHO_TRACKER_API || "";
+export const token_price = (tokenIds: string) =>
+	(process.env.REACT_APP_EXCHANGE || "").replace("{{ids}}", tokenIds);

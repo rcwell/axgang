@@ -1,18 +1,13 @@
-import { AcademicCapIcon } from '@heroicons/react/solid';
 import { Transition, Dialog } from '@headlessui/react';
-import { useState, Fragment, useContext } from 'react';
+import { useState, Fragment } from 'react';
 import { SignIn } from '../../Overlays';
-import { UserContext } from '../../..';
 
 export const GuestNav = () => {
 	const [doSignIn, setDoSignIn] = useState(Boolean);
 
-	const { onSetUser } = useContext(UserContext);
-
 	return (
 		<header className="relative bg-white w-full flex items-center border-b-2 border-gray-100 justify-between px-6 py-4 shadow-sm">
 			<div className="-mr-2 -my-2 flex flex-row items-center">
-				<AcademicCapIcon className="h-6 w-6 text-blue-600" />
 				<h1 className="text-2xl font-bold text-gray-800 accent-font ">
 					AXGANG
 				</h1>
@@ -55,13 +50,8 @@ export const GuestNav = () => {
 							leaveTo="opacity-0 scale-95">
 							<div className="inline-block w-full max-w-md my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
 								<SignIn
-									onOk={(user) => {
-										setDoSignIn(false);
-										onSetUser(user);
-									}}
-									onCancel={() => {
-										setDoSignIn(false);
-									}} />
+									onOk={() => setDoSignIn(false)}
+									onCancel={() => setDoSignIn(false)} />
 							</div>
 						</Transition.Child>
 					</div>

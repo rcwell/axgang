@@ -1,33 +1,27 @@
 import { LoginIcon } from '@heroicons/react/outline';
 import { KeyboardEvent, useContext, useRef, useState } from 'react';
 import cx from 'classnames';
-import { IUser, IUserCredentials } from '../../../../utils/constants/user';
+import { ICredentials } from '../../../../utils/constants/models/user';
 import { useOnClickOutside } from '../../../../hooks/onClickOutside';
-import { firebaseAuth } from '../../../../utils/firebase';
-import { AlertContext } from '..';
-import { AlertTypes } from '../../../../utils/constants/models/alert';
+import { signIn } from '../../../../utils/services';
+import { useAlert } from '../../../../contexts/alertContext';
 
 interface SignInProps {
-	onOk: (user: IUser) => void;
+	onOk: (user: ICredentials) => void;
 	onCancel: () => void;
 }
 
-// const allowed_users = [
-// 	'uspecify@gmail.com',
-// 	'rowell.congzon@gmail.com'
-// ];
-
 export const SignIn = (props: SignInProps) => {
 	const formRef = useRef<HTMLFormElement>(null);
-	const [credentials, setCredentials] = useState<IUserCredentials<string>>(Object);
-	const [errors, setErrors] = useState<IUserCredentials<boolean>>(Object);
+	const [credentials, setCredentials] = useState<any>(Object);
+	const [errors, setErrors] = useState<any>(Object);
 	const [isSigningIn, setIsSigningIn] = useState(Boolean);
+	const { addAlert } = useAlert();
 
 	useOnClickOutside(formRef, props.onCancel);
-	const alertCtx = useContext(AlertContext);
 
 	const handleOnSubmit = () => {
-		const _errors: IUserCredentials<boolean> = ["Email", "Password"]
+		const _errors: any = ["email", "password"]
 			.reduce((err, key) => {
 				return {
 					...err,
@@ -37,68 +31,47 @@ export const SignIn = (props: SignInProps) => {
 					)
 				};
 			}, {
-				Email: false,
-				Password: false
+				email: false,
+				password: false
 			});
 
-		if (!_errors.Password
-			&& !_errors.Email) {
+		if (!_errors.password
+			&& !_errors.email) {
 
 			setIsSigningIn(true);
 
-			return firebaseAuth
-				.signInWithEmailAndPassword(credentials.Email, credentials.Password)
-				.then((userCredential) => {
-					console.log({ userCredential });
-					const { user } = userCredential;
-					if(user){
-						props.onOk({
-							email: "",
-							id: "",
-							name: "",
-							picture: ""
-						});
+			return signIn(credentials, addAlert)
+				.then((res) => {
+					if (res?.user) {
+						props.onOk(credentials);
 					}
-				})
-				.catch((error) => {
-					console.log({ error });
-					const errorMessages: any = {
-						"auth/wrong-password": "Wrong Password",
-						"auth/user-not-found": "User not Found",
-						"auth/invalid-email": "Invalid Email"
-					};
-					alertCtx.addAlert({
-						title: errorMessages[error.code] || "",
-						message: error.message,
-						type: AlertTypes.Error,
-						show: true,
-						id: new Date()
-							.getTime()
-							.toString()
-					});
-				})
-				.finally(() => {
 					setIsSigningIn(false);
 				});
-			// setTimeout(() => {
-			// 	setIsSigningIn(false);
-			// 	props.onOk({
-			// 		Name: credentials.Username,
-			// 		Id: credentials.Password
-			// 	});
-			// }, 1000);
 		}
 
 		setErrors(_errors);
 	};
 
 	const handleOnChange = (event: KeyboardEvent<HTMLInputElement>) => {
-		const { currentTarget: { id, value } } = event;
-		setCredentials(p => ({
+		const { currentTarget: { id, value, parentElement }, key } = event;
+
+		if (key === 'Enter') {
+			if (id === 'email') {
+				(parentElement
+					?.nextElementSibling
+					?.childNodes
+					?.[1] as HTMLElement)
+					.focus();
+			} else {
+				handleOnSubmit();
+			}
+		}
+
+		setCredentials((p: any) => ({
 			...p,
 			[id]: value
 		}));
-		setErrors(p => ({
+		setErrors((p: any) => ({
 			...p,
 			[id]: value === ""
 		}));
@@ -122,13 +95,13 @@ export const SignIn = (props: SignInProps) => {
 						</label>
 						<input
 							onKeyUp={handleOnChange}
-							id="Email"
+							id="email"
 							type="text"
 							placeholder="Email"
 							className={cx("appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline", {
-								"border-red-500 ": errors.Email
+								"border-red-500 ": errors.email
 							})} />
-						{errors.Email && (
+						{errors.email && (
 							<p style={{ bottom: -8 }} className="text-red-500 text-xs italic absolute">Please enter a username.</p>
 						)}
 					</div>
@@ -138,13 +111,13 @@ export const SignIn = (props: SignInProps) => {
 						</label>
 						<input
 							onKeyUp={handleOnChange}
-							id="Password"
+							id="password"
 							type="password"
 							placeholder="Password"
 							className={cx("appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline", {
-								"border-red-500 ": errors.Password
+								"border-red-500 ": errors.password
 							})} />
-						{errors.Password && (
+						{errors.password && (
 							<p style={{ bottom: -8 }} className="text-red-500 text-xs italic absolute">Please enter a password.</p>
 						)}
 					</div>

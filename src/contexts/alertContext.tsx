@@ -1,5 +1,5 @@
-import { createContext, useState } from "react";
-import { AlertTypes, IAlert } from "../../../../utils/constants/models";
+import { createContext, useContext, useState } from "react";
+import { AlertTypes, IAlert } from "../utils/constants/models";
 import classNames from "classnames";
 import { XCircleIcon } from "@heroicons/react/outline";
 import { Transition } from "@headlessui/react";
@@ -12,7 +12,9 @@ export const AlertContext = createContext<IAlertContext>({
 	addAlert: () => { },
 });
 
-export const AlertsWrapper = ({ children }: any) => {
+export const useAlert = () => useContext(AlertContext);
+
+export const AlertsProvider = ({ children }: any) => {
 	const [alerts, setAlert] = useState<Array<IAlert>>([]);
 
 	const onAlertHide = (id: string) => {
@@ -29,7 +31,12 @@ export const AlertsWrapper = ({ children }: any) => {
 	};
 
 	const addAlert = (alert: IAlert) => {
-		setAlert(p => [...p, alert]);
+		setAlert(p => [...p, {
+			...alert,
+			id: new Date()
+				.getTime()
+				.toString()
+		}]);
 	};
 
 	return (
@@ -80,7 +87,7 @@ export const AlertsWrapper = ({ children }: any) => {
 									{x.title && <span className="font-bold mr-0.5">{x.title}</span>}
 									<p>{x.message}</p>
 									<XCircleIcon
-										onClick={() => onAlertHide(x.id)}
+										onClick={() => onAlertHide(x.id || x.title)}
 										className="w-5 h-5 absolute top-3 right-4 flex items-center"
 										role="button" />
 								</Transition>

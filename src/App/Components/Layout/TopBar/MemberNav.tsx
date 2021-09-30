@@ -1,7 +1,6 @@
-import { AcademicCapIcon, ViewGridIcon } from '@heroicons/react/solid';
-import axieTab from '../../../../assets/image/tab-axie.png';
+import { ViewGridIcon } from '@heroicons/react/solid';
 import cx from 'classnames';
-import { Fragment, useContext, useMemo } from 'react';
+import { Fragment, useMemo } from 'react';
 import { Popover, Transition } from '@headlessui/react';
 import {
 	ChartBarIcon,
@@ -16,20 +15,20 @@ import {
 	InformationCircleIcon,
 } from '@heroicons/react/outline';
 import { links } from '../../../../utils/constants/links';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import classNames from 'classnames';
 import { useWindowDimensions } from '../../../../hooks/useWindowDimensions';
-import { UserContext } from '../../..';
+import { ReactComponent as Logo } from '../../../../assets/icons/logo-mini.svg';
+import { useAuth } from '../../../../contexts';
 
 export const MemberNav = () => {
-
-	const { user, onSetUser } = useContext(UserContext);
-
+	const { logout, currentUser } = useAuth();
+	const history = useHistory();
 	const settings = useMemo(() => {
 		return buildSettings({
-			onAcountClick: () => { },
-			onSettingsClick: () => { },
-			onLogout: () => onSetUser(null),
+			onAcountClick: () => history.push('/profile'),
+			onSettingsClick: () => history.push('/settings'),
+			onLogout: logout
 		});
 	}, []);
 
@@ -45,10 +44,7 @@ export const MemberNav = () => {
 							<span className="sr-only">Open menu</span>
 							<MenuIcon className="h-5 w-5" aria-hidden="true" />
 						</Popover.Button>
-						<AcademicCapIcon className="h-6 w-6 text-blue-600" />
-						<h1 className="text-2xl font-bold text-gray-800 accent-font ">
-							AXGANG
-						</h1>
+						<Logo className="w-20 text-gray-800" />
 					</div>
 
 					<Popover.Group as="nav" className="flex -my-2 w-full justify-end">
@@ -173,8 +169,8 @@ export const MemberNav = () => {
 											'md:mr-2 bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500'
 										)}>
 										<UserCircleIcon className="h-5 w-5 text-gray-500" />
-										<span className={"ml-2 hidden md:inline-flex"}>
-											{user?.name}
+										<span className={"ml-2 hidden md:inline-flex text-xs"}>
+											{currentUser?.displayName || currentUser?.email}
 										</span>
 									</Popover.Button>
 
@@ -237,10 +233,10 @@ export const MemberNav = () => {
 						<Popover.Panel
 							focus
 							static
-							className="absolute top-0 inset-x-0 p-2 transition transform origin-top-right md:hidden">
-							<div className="rounded-lg p-4 shadow-lg ring-1 ring-black ring-opacity-5 bg-white divide-y-2 divide-gray-50">
+							className="absolute top-0 inset-x-0 p-2 transition transform origin-top-right md:hidden z-10">
+							<div className="rounded-lg p-4 shadow-lg ring-1 ring-black ring-opacity-5 bg-white divide-y-2 divide-gray-50 ">
 								<div className="flex items-center justify-between pb-4">
-									<AcademicCapIcon className="h-8 w-auto text-blue-600" />
+									<Logo className="w-20 text-gray-800" />
 									<Popover.Button className="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500">
 										<span className="sr-only">Close menu</span>
 										<XIcon className="h-6 w-6" aria-hidden="true" />
@@ -256,14 +252,6 @@ export const MemberNav = () => {
 											<span className="ml-3 text-base font-medium text-gray-900">{link.display}</span>
 										</Link>
 									))}
-									<Link
-										to={'/axies'}
-										key={'/axies'}
-										className="p-2 -mx-2 flex items-center rounded-md hover:bg-blue-50">
-										<img src={axieTab}
-											className={"flex-shrink-0 h-6 w-6 text-blue-600"} />
-										<span className="ml-3 text-base font-medium text-gray-900">Axies</span>
-									</Link>
 								</nav>
 								<div className="grid grid-cols-2 gap-y-4 gap-x-8 pt-4">
 									{tools.map((item) => (

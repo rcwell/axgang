@@ -2,32 +2,44 @@ import firebase from "firebase/app";
 import "firebase/database";
 import "firebase/auth";
 import { config } from "./config";
+import { ICredentials } from "../constants/models";
+
+const initializedApps = firebase.apps;
 
 // INIT
-firebase.initializeApp(config);
+const primaryFirebase = initializedApps.find(({ name }) => name === "[DEFAULT]")
+	? firebase.app("[DEFAULT]")
+	: firebase.initializeApp(config, "[DEFAULT]");
+
+// Instace for Creating USER ##HACK##
+const subFirebase = initializedApps.find(({ name }) => name === "[AUTH]")
+	? firebase.app("[AUTH]")
+	: firebase.initializeApp(config, "[AUTH]");
 
 // PROVIDERS
 const database = firebase.database();
 const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
 const firebaseAuth = firebase.auth();
+const secondaryAuth = subFirebase.auth();
+const createAuth = async ({ email, password }: ICredentials) => {
+	await secondaryAuth.createUserWithEmailAndPassword(email, password);
+	secondaryAuth.signOut();
+};
 
 // COLLETIONS
-const itemsCollection = database.ref("/Items");
-
 const usersCollection = database.ref("/users");
-const accountsCollection = database.ref("/accounts");
-const inventoryCollection = database.ref("/inventory");
-const cashoutsCollection = database.ref("/cashouts");
+const inventoryCollection = database.ref("/inventory"); // SLP, Date
+
+const cashoutsCollection = database.ref("/cashouts"); // All Cashout dates, current prices
 
 // EXPORTS
 export {
-	firebase,
+	primaryFirebase as firebase,
 	database,
 	googleAuthProvider,
 	firebaseAuth,
-	itemsCollection,
+	createAuth,
 	usersCollection,
-	accountsCollection,
 	inventoryCollection,
 	cashoutsCollection,
 };

@@ -3,7 +3,7 @@ export interface IAlert {
 	message: string;
 	title: string;
 	show: boolean;
-	id: string;
+	id?: string;
 }
 
 export enum AlertTypes {

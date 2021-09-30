@@ -19,8 +19,8 @@ export const useGetDeviceType = (): DeviceType => {
 			windowSize.width > 991
 				? DeviceType.Desktop
 				: windowSize.width > 425
-				? DeviceType.Tablet
-				: DeviceType.Mobile,
+					? DeviceType.Tablet
+					: DeviceType.Mobile,
 		[windowSize]
 	);
 
