@@ -28,9 +28,8 @@ const createAuth = async ({ email, password }: ICredentials) => {
 
 // COLLETIONS
 const usersCollection = database.ref("/users");
-const inventoryCollection = database.ref("/inventory"); // SLP, Date
-
-const cashoutsCollection = database.ref("/cashouts"); // All Cashout dates, current prices
+const inventoryCollection = database.ref("/inventory");
+const cashoutsCollection = database.ref("/cashouts");
 
 // EXPORTS
 export {

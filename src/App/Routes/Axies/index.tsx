@@ -4,15 +4,17 @@ import { axies_query, axie_info, static_variables } from '../../../utils/constan
 import { Transition, Dialog } from '@headlessui/react';
 import { Fragment } from 'react';
 import { AbilityCard, AxieCard } from "../../Components/UI";
+import { useData } from "../../../contexts/dataContext";
 
 export const Axies = () => {
+	const { walletAddress } = useData();
 	const [showAxieInfo, setShowAxieInfo] = useState(Boolean);
 	const [getAxie, axieInfoMeta] = useLazyQuery(gql`${axie_info}`);
 
 	const { loading, data } = useQuery(gql`${axies_query}`, {
 		variables: {
 			...static_variables,
-			roninAddress: "0x976d45396c611510ca8abf5f3bb78063b94dd976",
+			roninAddress: walletAddress,
 		}
 	});
 

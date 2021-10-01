@@ -1,7 +1,7 @@
 import { ViewGridIcon } from '@heroicons/react/solid';
 import cx from 'classnames';
-import { Fragment, useMemo } from 'react';
-import { Popover, Transition } from '@headlessui/react';
+import { Fragment, useMemo, useState } from 'react';
+import { Dialog, Popover, Transition } from '@headlessui/react';
 import {
 	ChartBarIcon,
 	CursorClickIcon,
@@ -10,6 +10,7 @@ import {
 	CogIcon,
 	BellIcon,
 	UserCircleIcon,
+	LockClosedIcon,
 	LogoutIcon,
 	ExclamationIcon,
 	InformationCircleIcon,
@@ -20,13 +21,17 @@ import classNames from 'classnames';
 import { useWindowDimensions } from '../../../../hooks/useWindowDimensions';
 import { ReactComponent as Logo } from '../../../../assets/icons/logo-mini.svg';
 import { useAuth } from '../../../../contexts';
+import { PasswordForm } from '../../Overlays';
+import { useData } from '../../../../contexts/dataContext';
 
 export const MemberNav = () => {
+	const [changePasswordOpen, setChangePassWordOpen] = useState(Boolean);
 	const { logout, currentUser } = useAuth();
+	const { mandatePasswordChange } = useData();
 	const history = useHistory();
 	const settings = useMemo(() => {
 		return buildSettings({
-			onAcountClick: () => history.push('/profile'),
+			onChangePasswordClick: () => setChangePassWordOpen(true),
 			onSettingsClick: () => history.push('/settings'),
 			onLogout: logout
 		});
@@ -266,6 +271,45 @@ export const MemberNav = () => {
 							</div>
 						</Popover.Panel>
 					</Transition>
+
+					<Transition appear show={mandatePasswordChange || changePasswordOpen} as={Fragment}>
+						<Dialog
+							as="div"
+							className="fixed inset-0 z-10 overflow-y-auto"
+							onClose={() => setChangePassWordOpen(false)}>
+							<div className="min-h-screen px-4 text-center">
+								<Transition.Child
+									as={Fragment}
+									enter="ease-out duration-300"
+									enterFrom="opacity-0"
+									enterTo="opacity-100"
+									leave="ease-in duration-200"
+									leaveFrom="opacity-100"
+									leaveTo="opacity-0">
+									<Dialog.Overlay className="fixed inset-0 bg-blue-900 bg-opacity-30" />
+								</Transition.Child>
+								<span
+									className="inline-block h-screen align-middle"
+									aria-hidden="true">
+									&#8203;
+								</span>
+								<Transition.Child
+									as={Fragment}
+									enter="ease-out duration-300"
+									enterFrom="opacity-0 scale-95"
+									enterTo="opacity-100 scale-100"
+									leave="ease-in duration-200"
+									leaveFrom="opacity-100 scale-100"
+									leaveTo="opacity-0 scale-95">
+									<div className="inline-block w-full max-w-md my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
+										<PasswordForm
+											onClose={() => setChangePassWordOpen(false)}
+											mandate={mandatePasswordChange} />
+									</div>
+								</Transition.Child>
+							</div>
+						</Dialog>
+					</Transition>
 				</>
 			)
 			}
@@ -312,22 +356,22 @@ const notifications = [
 
 interface IBuildUserOptionsDropdown {
 	onLogout: () => void,
-	onAcountClick: () => void,
+	onChangePasswordClick: () => void,
 	onSettingsClick: () => void
 }
 const buildSettings = (props: IBuildUserOptionsDropdown) => {
-	const { onLogout, onAcountClick, onSettingsClick } = props;
+	const { onLogout, onChangePasswordClick } = props;
 	return [
 		{
-			name: 'Account',
-			icon: UserCircleIcon,
-			onClick: onAcountClick
+			name: 'Change Password',
+			icon: LockClosedIcon,
+			onClick: onChangePasswordClick
 		},
-		{
-			name: 'Settings',
-			icon: CogIcon,
-			onClick: onSettingsClick
-		},
+		// {
+		// 	name: 'Settings',
+		// 	icon: CogIcon,
+		// 	onClick: onSettingsClick
+		// },
 		{
 			name: 'divider',
 			icon: null,

@@ -20,7 +20,7 @@ interface UserFormProps {
 	method?: UserFormMethod;
 	userAccount?: IUser;
 }
-type IForm<T = string, K = UserTypes> = Omit<IUser<T, K>, 'managerId'> & Partial<Omit<ICredentials<T>, 'email'>>
+type IForm<T = string, K = UserTypes> = Omit<IUser<T, K>, 'managerId' | 'passwordChanged'> & Partial<Omit<ICredentials<T>, 'email'>>
 
 export const UserForm = ({
 	onCancel,

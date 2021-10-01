@@ -1,6 +1,6 @@
 import { createContext, FC, useContext, useEffect, useMemo, useState } from "react";
 import { useAuth } from ".";
-import { ICredentials, ISlpData, IUser } from "../utils/constants/models";
+import { ICredentials, IUser } from "../utils/constants/models";
 import { ISlp } from "../utils/constants/models/slp";
 import { createAuth, inventoryCollection, usersCollection } from "../utils/firebase";
 import { snapshotToModel } from "./mapper";
@@ -10,10 +10,13 @@ interface IDataContext {
 	users: IUser[],
 	managers: IUser[],
 	userId: string;
+	walletAddress: string;
+	mandatePasswordChange: boolean;
 	slpData: ISlp[];
 	addPerson: (person: NewUser) => Promise<any>
-	updatePerson: (person: IUser) => Promise<any>
+	updatePerson: (person: Partial<IUser>) => Promise<any>
 	saveSlpData: (slpData: ISlp) => Promise<boolean>
+	setMandatePasswordChange: React.Dispatch<React.SetStateAction<boolean>>
 }
 const DataContext = createContext<IDataContext>({} as any);
 
@@ -21,9 +24,12 @@ export const useData = () => useContext(DataContext);
 
 export const DataContextProvider: FC = ({ children }) => {
 	const { currentUser } = useAuth();
+	const [mandatePasswordChange, setMandatePasswordChange] = useState(Boolean);
 	const [users, setUsers] = useState<IUser[]>(Array);
 	const [slpData, setSlpData] = useState<ISlp[]>(Array);
 	const [userId, setUserId] = useState(String);
+	const [user, setUser] = useState<IUser>();
+	const [walletAddress, setWalletAddress] = useState(String);
 
 	useEffect(() => {
 		usersCollection.on("value", (snapshot) => {
@@ -33,19 +39,30 @@ export const DataContextProvider: FC = ({ children }) => {
 	}, []);
 
 	useEffect(() => {
-		inventoryCollection.on("value", (snapshot) => {
-			const data = snapshot.val();
-			const d: any = Object.values(data)[0];
-			setSlpData(snapshotToModel<ISlp>(d));
-		});
-	}, []);
+		if (!userId) return;
+		inventoryCollection
+			.child(userId)
+			.on("value", (snapshot) => {
+				const data = snapshot.val();
+				setSlpData(snapshotToModel<ISlp>(data));
+			});
+	}, [userId]);
 
 	useEffect(() => {
 		if (!userId && currentUser) {
 			const user = users.find(({ email }) => email === currentUser.email);
+			setUser(user);
 			setUserId(user?.id ?? "");
+			setWalletAddress(user?.address ?? "");
+			setMandatePasswordChange(!user?.passwordChanged);
 		}
 	}, [users, userId]);
+
+	useEffect(() => {
+		if (user && mandatePasswordChange) {
+			setMandatePasswordChange(!user.passwordChanged);
+		}
+	}, [user, mandatePasswordChange]);
 
 	const addPerson = async ({ address, email, password, ...user }: IUser & Pick<ICredentials, 'password'>) => {
 		try {
@@ -72,13 +89,16 @@ export const DataContextProvider: FC = ({ children }) => {
 
 	const addUser = (user: Omit<IUser, 'id'>) => usersCollection.push(user);
 
-	const updatePerson = async ({ id = '', ...rest }: IUser) => {
+	const updatePerson = async (newValues: Partial<IUser>) => {
+		const { id, ...currentUserProps } = user ?? {};
 		if (!id) return false;
-
 		try {
 			usersCollection
 				.child(id)
-				.set(rest);
+				.set({
+					...currentUserProps,
+					...newValues,
+				});
 			return true;
 		} catch (error) {
 			return false;
@@ -110,6 +130,9 @@ export const DataContextProvider: FC = ({ children }) => {
 			addPerson,
 			updatePerson,
 			saveSlpData,
+			walletAddress,
+			mandatePasswordChange,
+			setMandatePasswordChange,
 		}}>
 			{children}
 		</DataContext.Provider>

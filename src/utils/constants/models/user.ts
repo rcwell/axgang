@@ -6,6 +6,7 @@ export interface IUser<T = string, K = UserTypes>
 	address: T;
 	managerId?: T;
 	id?: T;
+	passwordChanged?: boolean;
 }
 
 export interface ICredentials<T = string> {

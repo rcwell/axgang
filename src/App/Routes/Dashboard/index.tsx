@@ -5,23 +5,19 @@ import { token_price } from "../../../utils/constants/api";
 import { gql, useQuery } from "@apollo/client";
 import { public_profile } from "../../../utils/constants/queries";
 import { ReactComponent as SwordsIcon } from '../../../assets/icons/swords.svg';
-import classNames from "classnames";
 import moment from "moment";
 import { COINS, COIN_ICONS } from "../../../utils/constants/coins";
 import { Popover, Transition } from "@headlessui/react";
 import cx from 'classnames';
 import { useData } from "../../../contexts/dataContext";
 
-const ronin_id = "0x976d45396c611510ca8abf5f3bb78063b94dd976";
-export const gors_ronin = "0xfc608b17e618cb19e439e4dd052058599df38e79";
-
 const coins = Object.values(COINS)
 	.filter(c => typeof c === 'string');
 
 export const Dashboard = () => {
-	const { slpData } = useData();
+	const { slpData, walletAddress } = useData();
 	const { loading: loadingProfile, data: profileData } = useQuery(gql`${public_profile}`, {
-		variables: { roninAddress: ronin_id }
+		variables: { roninAddress: walletAddress }
 	});
 	const [conversions, setConversions] = useState<IRateConversionMap<number>>(coins.reduce((map: IRateConversionMap<number>, coin) => ({
 		...map,
