@@ -24,7 +24,7 @@ export const useData = () => useContext(DataContext);
 
 export const DataContextProvider: FC = ({ children }) => {
 	const { currentUser } = useAuth();
-	const [mandatePasswordChange, setMandatePasswordChange] = useState(Boolean);
+	const [mandatePasswordChange, setMandatePasswordChange] = useState(false);
 	const [users, setUsers] = useState<IUser[]>(Array);
 	const [slpData, setSlpData] = useState<ISlp[]>(Array);
 	const [userId, setUserId] = useState(String);
@@ -54,7 +54,8 @@ export const DataContextProvider: FC = ({ children }) => {
 			setUser(user);
 			setUserId(user?.id ?? "");
 			setWalletAddress(user?.address ?? "");
-			setMandatePasswordChange(!user?.passwordChanged);
+			if (user)
+				setMandatePasswordChange(!user.passwordChanged);
 		}
 	}, [users, userId]);
 

@@ -15,13 +15,8 @@ export const Reports = () => {
 		slpData: undefined,
 		open: false
 	});
-
-	const { users, slpData } = useData();
+	const { slpData } = useData();
 	const device = useGetDeviceType();
-	const userAccounts = useMemo(() => {
-		let _users = [...users];
-		return _users;
-	}, [users]);
 
 	const onAddReport = () => setModalForm({
 		slpData: undefined,
@@ -31,10 +26,6 @@ export const Reports = () => {
 		...p,
 		open: false
 	}));
-
-	const latestEntry = useMemo(() => {
-		return moment(slpData.pop()?.datetime);
-	}, [slpData]);
 
 	return (
 		<Fragment>
@@ -110,7 +101,7 @@ export const Reports = () => {
 								<ReportForm
 									onCancel={resetForm}
 									onSuccess={resetForm}
-									todaysReportAdded={latestEntry.isSame(moment(), 'day')} />
+									todaysReportAdded={false} />
 							</div>
 						</Transition.Child>
 					</div>

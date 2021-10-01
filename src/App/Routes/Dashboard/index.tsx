@@ -137,7 +137,7 @@ export const Dashboard = () => {
 					</thead>
 					<tbody>
 						{
-							slpData
+							[...slpData]
 								.slice(0, 10)
 								.map((slp) => (
 									<tr key={slp.id} className="hover:bg-blue-50 cursor-pointer">
